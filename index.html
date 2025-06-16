@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grammatik üben – Deutsch A2 Trainer</title>
+  <!-- Font Awesome für Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --blue:       #0052CC;
+      --amber:      #F2A738;
+      --coral:      #D45A56;
+      --grass:      #7FC97F;
+      --white:      #FFFFFF;
+      --text:       #222222;
+      --shadow:     rgba(0,0,0,0.2);
+      --background: #FFF5CC;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, var(--blue), var(--coral));
+      padding: 1rem 2rem;
+      color: var(--white);
+      box-shadow: 0 4px 12px var(--shadow);
+      position: sticky; top: 0; z-index: 10;
+    }
+    header .logo { display: flex; align-items: center; }
+    header .logo img { height: 36px; }
+    header .logo span {
+      font-size: 1.5rem; font-weight: 700; margin-left: .5rem;
+    }
+    nav a {
+      color: var(--white); text-decoration: none; margin-left: 1.5rem;
+      position: relative; font-weight: 600;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 3px; background: var(--amber);
+      transition: width .3s;
+    }
+    nav a:hover::after { width: 100%; }
+
+    .hero {
+      text-align: center; padding: 3rem 1rem;
+      background: url('hero-bg.jpg') center/cover no-repeat;
+      position: relative; color: var(--white);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 700px; margin: auto; }
+    .hero-content h1 { font-size: 2.5rem; margin-bottom: .5rem; }
+    .hero-content p  { font-size: 1.1rem; }
+
+    main { padding: 2rem 1rem; max-width: 1200px; margin: auto; }
+    .section {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px var(--shadow);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .section h2 {
+      background: var(--amber); color: var(--white);
+      margin: 0; padding: 1rem; font-size: 1.5rem;
+    }
+    .section-content { padding: 1.5rem; }
+
+    /* Quiz multiple choice */
+    .quiz-question { margin-bottom: 1.5rem; }
+    .quiz-options label {
+      display: block; margin: .5rem 0;
+      padding: .5rem 1rem;
+      border: 2px solid var(--shadow);
+      border-radius: 6px;
+      cursor: pointer; transition: background .3s;
+    }
+    .quiz-options input { display: none; }
+    .quiz-options input:checked + label {
+      background: var(--blue); color: var(--white);
+      border-color: var(--blue);
+    }
+    .btn-check {
+      display: inline-block;
+      background: var(--blue); color: var(--white);
+      padding: .6rem 1.2rem; border: none; border-radius: 6px;
+      cursor: pointer; font-weight: 600; margin-top: .5rem;
+    }
+    .feedback { margin-top: .5rem; font-weight: 600; }
+
+    /* Fill-in-the-blank Präpositionen */
+    .fill-sentence { margin: 1rem 0; font-size: 1rem; }
+    .fill-input {
+      width: 100px; padding: .2rem;
+      border: 1px solid var(--shadow);
+      border-radius: 4px; margin-left: .5rem;
+    }
+
+    /* Drag & Drop Fälle */
+    .dnd-container { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem; }
+    .dnd-list, .dnd-targets {
+      flex: 1; min-width: 200px;
+      background: #f0f0f0; padding: 1rem; border-radius: 8px;
+    }
+    .dnd-list .item, .dnd-targets .dropzone {
+      background: var(--white); margin: .5rem 0; padding: .5rem;
+      border: 2px dashed var(--shadow); border-radius: 6px;
+      text-align: center; cursor: grab;
+    }
+    .dnd-targets .dropzone.over { background: var(--amber); }
+
+    /* Satzbau Übung */
+    .word-list-sb, .sentence-target-sb {
+      display: flex; gap: .5rem; flex-wrap: wrap;
+      padding: .5rem; border: 2px dashed var(--shadow);
+      border-radius: 6px; min-height: 60px; margin-bottom: 1rem;
+      background: #fafafa;
+    }
+    .word-list-sb .item, .sentence-target-sb .item {
+      background: var(--white); padding: .5rem 1rem;
+      border: 1px solid var(--shadow); border-radius: 4px;
+      cursor: grab;
+    }
+    .btn-sentence-check { margin-top: 0.5rem; }
+
+    /* Adjektivendungen (multiple choice) */
+    .adj-question { margin-bottom: 1.5rem; }
+
+    /* Flashcards Wortschatz */
+    .flashcards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+      gap: 1rem;
+    }
+    .flashcard { perspective: 800px; cursor: pointer; }
+    .flashcard-inner {
+      position: relative; width: 100%; height: 150px;
+      transition: transform .6s; transform-style: preserve-3d;
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; box-shadow: 0 4px 12px var(--shadow);
+      font-size: 1.2rem; font-weight: bold;
+    }
+    .flashcard-front { background: var(--white); color: var(--blue); }
+    .flashcard-back  { background: var(--amber); color: var(--text); transform: rotateY(180deg); }
+
+    @media(max-width:600px){
+      .hero-content h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="germany-flag.svg" alt="DE">
+      <span>Grammatik üben</span>
+    </div>
+    <nav>
+      <a href="#tenses">Zeiten</a>
+      <a href="#cases">Fälle</a>
+      <a href="#preps">Präpositionen</a>
+      <a href="#sentence">Satzbau</a>
+      <a href="#adjectives">Adjektivendungen</a>
+      <a href="#flashcards">Wortschatz</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Grammatik üben</h1>
+      <p>Lerne Zeiten, Fälle und Präpositionen durch interaktive Rätsel.</p>
+    </div>
+  </section>
+
+  <main>
+
+    <!-- Zeiten Quiz -->
+    <div id="tenses" class="section">
+      <h2>Zeiten Quiz</h2>
+      <div class="section-content">
+        <div class="quiz-question" id="q1">
+          <p>1. Er ______ (gehen) gestern ins Kino.</p>
+          <div class="quiz-options">
+            <input type="radio" id="q1o1" name="q1" value="geht"><label for="q1o1">geht</label>
+            <input type="radio" id="q1o2" name="q1" value="ging"><label for="q1o2">ging</label>
+            <input type="radio" id="q1o3" name="q1" value="gegangen"><label for="q1o3">gegangen</label>
+          </div>
+          <button class="btn-check" data-question="q1" data-answer="ging">Überprüfen</button>
+          <div class="feedback" id="q1-feedback"></div>
+        </div>
+
+        <div class="quiz-question" id="q2">
+          <p>2. Wir ______ (sein) letzte Woche in Berlin.</p>
+          <div class="quiz-options">
+            <input type="radio" id="q2o1" name="q2" value="sind"><label for="q2o1">sind</label>
+            <input type="radio" id="q2o2" name="q2" value="waren"><label for="q2o2">waren</label>
+            <input type="radio" id="q2o3" name="q2" value="gewesen"><label for="q2o3">gewesen</label>
+          </div>
+          <button class="btn-check" data-question="q2" data-answer="waren">Überprüfen</button>
+          <div class="feedback" id="q2-feedback"></div>
+        </div>
+
+        <div class="quiz-question" id="q3">
+          <p>3. Ich ______ (machen) meine Hausaufgaben jeden Tag.</p>
+          <div class="quiz-options">
+            <input type="radio" id="q3o1" name="q3" value="mache"><label for="q3o1">mache</label>
+            <input type="radio" id="q3o2" name="q3" value="machte"><label for="q3o2">machte</label>
+            <input type="radio" id="q3o3" name="q3" value="gemacht"><label for="q3o3">gemacht</label>
+          </div>
+          <button class="btn-check" data-question="q3" data-answer="mache">Überprüfen</button>
+          <div class="feedback" id="q3-feedback"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fälle Ordnen -->
+    <div id="cases" class="section">
+      <h2>Fälle Ordnen</h2>  
+      <div class="section-content">
+        <p>Ziehen Sie die Artikel zum richtigen Fall:</p>
+        <div class="dnd-container">
+          <div class="dnd-list" id="articles">
+            <div class="item draggable" draggable="true">dem</div>
+            <div class="item draggable" draggable="true">der</div>
+            <div class="item draggable" draggable="true">des</div>
+          </div>
+          <div class="dnd-targets">
+            <div class="dropzone" data-case="Dativ">Dativ</div>
+            <div class="dropzone" data-case="Nominativ">Nominativ</div>
+            <div class="dropzone" data-case="Genitiv">Genitiv</div>
+          </div>
+        </div>
+        <button class="btn-check" id="cases-check">Überprüfen</button>
+        <div class="feedback" id="cases-feedback"></div>
+      </div>
+    </div>
+
+    <!-- Präpositionen Lückentext -->
+    <div id="preps" class="section">
+      <h2>Präpositionen Lückentext</h2>
+      <div class="section-content">
+        <p class="fill-sentence">
+          Ich wohne <input class="fill-input" data-answer="in" placeholder="..."> Berlin.
+        </p>
+        <p class="fill-sentence">
+          Das Buch liegt <input class="fill-input" data-answer="auf" placeholder="..."> dem Tisch.
+        </p>
+        <p class="fill-sentence">
+          Das Bild hängt <input class="fill-input" data-answer="an" placeholder="..."> der Wand.
+        </p>
+        <p class="fill-sentence">
+          Wir fahren <input class="fill-input" data-answer="mit" placeholder="..."> dem Bus.
+        </p>
+        <button class="btn-check" id="preps-check">Überprüfen</button>
+        <div class="feedback" id="preps-feedback"></div>
+      </div>
+    </div>
+
+    <!-- Satzbau Übung -->
+    <div id="sentence" class="section">
+      <h2>Satzbau Übung</h2>
+      <div class="section-content">
+        <p>Bilde den Satz, indem du die Wörter in die richtige Reihenfolge ziehst:</p>
+        <ul class="word-list-sb" id="sb-words">
+          <li class="item draggable" draggable="true">isst</li>
+          <li class="item draggable" draggable="true">einen Apfel</li>
+          <li class="item draggable" draggable="true">das Kind</li>
+        </ul>
+        <ul class="sentence-target-sb" id="sb-target">
+          <!-- hier landen die Wörter -->
+        </ul>
+        <button class="btn-check btn-sentence-check" id="sentence-check">Überprüfen</button>
+        <div class="feedback" id="sentence-feedback"></div>
+      </div>
+    </div>
+
+    <!-- Adjektivendungen -->
+    <div id="adjectives" class="section">
+      <h2>Adjektivendungen</h2>
+      <div class="section-content">
+        <div class="adj-question" id="a1">
+          <p>1. Ein <strong>___</strong> Mann sitzt dort.</p>
+          <div class="quiz-options">
+            <input type="radio" id="a1o1" name="a1" value="guten"><label for="a1o1">guter</label>
+            <input type="radio" id="a1o2" name="a1" value="guter"><label for="a1o2">guten</label>
+            <input type="radio" id="a1o3" name="a1" value="gute"><label for="a1o3">gute</label>
+          </div>
+          <button class="btn-check" data-question="a1" data-answer="guten">Überprüfen</button>
+          <div class="feedback" id="a1-feedback"></div>
+        </div>
+        <div class="adj-question" id="a2">
+          <p>2. Ich sehe eine <strong>___</strong> Blume.</p>
+          <div class="quiz-options">
+            <input type="radio" id="a2o1" name="a2" value="schönen"><label for="a2o1">schöne</label>
+            <input type="radio" id="a2o2" name="a2" value="schöne"><label for="a2o2">schönen</label>
+            <input type="radio" id="a2o3" name="a2" value="schönes"><label for="a2o3">schönes</label>
+          </div>
+          <button class="btn-check" data-question="a2" data-answer="schöne">Überprüfen</button>
+          <div class="feedback" id="a2-feedback"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flashcards Wortschatz -->
+    <div id="flashcards" class="section">
+      <h2>Wortschatz-Flashcards</h2>
+      <div class="section-content flashcards-grid">
+        <div class="flashcard" data-word="Haus" data-translation="house">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">Haus</div>
+            <div class="flashcard-back">house</div>
+          </div>
+        </div>
+        <div class="flashcard" data-word="Baum" data-translation="tree">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">Baum</div>
+            <div class="flashcard-back">tree</div>
+          </div>
+        </div>
+        <div class="flashcard" data-word="Straße" data-translation="street">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">Straße</div>
+            <div class="flashcard-back">street</div>
+          </div>
+        </div>
+        <div class="flashcard" data-word="Zug" data-translation="train">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">Zug</div>
+            <div class="flashcard-back">train</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Multiple Choice Quiz (Zeiten & Adjektive)
+    document.querySelectorAll('.btn-check[data-question]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.dataset.question;
+        const ans = btn.dataset.answer;
+        const sel = document.querySelector(`input[name="${q}"]:checked`);
+        const fb = document.getElementById(`${q}-feedback`);
+        if (!sel) {
+          fb.textContent = 'Bitte wählen!';
+          fb.style.color = 'orange';
+          return;
+        }
+        if (sel.value === ans) {
+          fb.textContent = 'Richtig!';
+          fb.style.color = 'green';
+        } else {
+          fb.textContent = `Falsch. Richtige Antwort: ${ans}.`;
+          fb.style.color = 'red';
+        }
+      });
+    });
+
+    // Fill-in-the-blank Präpositionen
+    document.getElementById('preps-check').addEventListener('click', () => {
+      const inputs = document.querySelectorAll('.fill-input');
+      let ok = true;
+      inputs.forEach(inp => {
+        if (inp.value.trim().toLowerCase() === inp.dataset.answer) {
+          inp.style.borderColor = 'green';
+        } else {
+          inp.style.borderColor = 'red';
+          ok = false;
+        }
+      });
+      const fb = document.getElementById('preps-feedback');
+      fb.textContent = ok ? 'Gut gemacht!' : 'Bitte überprüfe rot markierte Felder.';
+      fb.style.color = ok ? 'green' : 'red';
+    });
+
+    // Drag & Drop für Fälle + Satzbau
+    let dragged;
+    document.addEventListener('dragstart', e => {
+      if (e.target.classList.contains('draggable')) {
+        dragged = e.target;
+      }
+    });
+    document.querySelectorAll('.dropzone, .sentence-target-sb').forEach(zone => {
+      zone.addEventListener('dragover', e => e.preventDefault());
+      zone.addEventListener('dragenter', () => zone.classList.add('over'));
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', () => {
+        zone.classList.remove('over');
+        if (!zone.querySelector('.draggable')) {
+          zone.appendChild(dragged);
+        }
+      });
+    });
+
+    // Überprüfung Fälle
+    document.getElementById('cases-check').addEventListener('click', () => {
+      const mapping = { 'Dativ':'dem', 'Nominativ':'der', 'Genitiv':'des' };
+      let correct = 0;
+      document.querySelectorAll('.dropzone').forEach(z => {
+        const it = z.querySelector('.draggable');
+        if (it && it.textContent === mapping[z.dataset.case]) correct++;
+      });
+      const fb = document.getElementById('cases-feedback');
+      fb.textContent = correct === 3 
+        ? 'Alle richtig!' 
+        : `Du hast ${correct} von 3 richtig.`;
+      fb.style.color = correct === 3 ? 'green' : 'red';
+    });
+
+    // Überprüfung Satzbau
+    document.getElementById('sentence-check').addEventListener('click', () => {
+      const target = Array.from(document.querySelectorAll('#sb-target .item')).map(i => i.textContent).join(' ');
+      const fb = document.getElementById('sentence-feedback');
+      if (target === 'das Kind isst einen Apfel') {
+        fb.textContent = 'Perfekt!';
+        fb.style.color = 'green';
+      } else {
+        fb.textContent = 'Versuche es noch einmal.';
+        fb.style.color = 'red';
+      }
+    });
+
+    // Flashcards flip
+    document.querySelectorAll('.flashcard').forEach(fc => {
+      fc.addEventListener('click', () => {
+        fc.classList.toggle('flipped');
+      });
+    });
+  </script>
+
+</body>
+</html>
